@@ -1,15 +1,8 @@
 window.__mase__ = '';
-const __container__ = document.createElement('div')
-__container__.style = `width: 100%;position: absolute;z-index: 999;top:0; display: none` 
-__container__.setAttribute('id', '__tips_container__')
-const __tips_node__ = document.createElement('div')
-__tips_node__.style = `align-items: center;justify-content: center;margin: auto;display: flex;width: 100px;height: 100px;background: rgba(0,0,0,0.7)`
-const __tips_content__ = document.createElement('div')
-__tips_content__.style = `font-size:  30px;color: #FFF;`
-__tips_content__.setAttribute('id', '__tips_text__')
-__tips_node__.appendChild(__tips_content__)
-__container__.appendChild(__tips_node__)
-document.body.appendChild(__container__)
+const _upEl = document.querySelector('div.grid > button:nth-child(2)')
+const _leftEl = document.querySelector('div.grid > button:nth-child(4)')
+const _downEl = document.querySelector('div.grid > button:nth-child(5)')
+const _rightEl = document.querySelector('div.grid > button:nth-child(6)')
 function findMazePath(walls, start, goal) {
     const rows = walls.length; 
     const cols = rows > 0 ? walls[0].length : 0;
@@ -89,16 +82,16 @@ window.fetch  = async (input, init) => {
                 if (steps === null ) {
                     console.log('解谜失败')
                 }
+                // step: 上右下左
+                // 该版本为提示版，未绕过网站js事件检测
+                // 如果需要绕过event.isTrusted 可以使用外部服务，发送一个HTTP请求模拟按键
+                // 也可使用指纹浏览器来模拟按键
                 for (const step of steps) {
-                    const keyCode = step === '上' ? {name: 'Up', code: 38} : 
-                    step === '下' ? {name: 'Down', code: 40} : 
-                    step === '左' ? {name: 'Left', code: 37} : 
-                    step === '右' ? {name: 'Right', code: 39} : {name: '', code: 0}
-                    if (keyCode.name !== '') {
-                        document.getElementById('__tips_container__').style.display = 'block'
-                        document.getElementById('__tips_text__').innerText = step
-                    }
-                    await new Promise(resolve => document.addEventListener('keydown', resolve))
+                    step === '上' ? _upEl.click() : 
+                    step === '下' ? _downEl.click() : 
+                    step === '左' ? _leftEl.click() : 
+                    step === '右' ? _rightEl.click() : ''
+                    await new Promise(resolve => setTimeout(resolve, Math.floor(Math.random()  * 51) + 50))
                 }
             }, 500)
         }  
